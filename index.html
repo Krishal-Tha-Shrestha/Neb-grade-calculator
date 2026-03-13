@@ -3,7 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NEB Grade 12 GPA Calculator</title>
+
+<!-- ─── SEO: Improved Title ─── -->
+<title>NEB GPA Calculator for Grade 12 (Science) | Nepal Education Board</title>
+
+<!-- ─── SEO: Meta Tags ─── -->
+<meta name="description" content="Free NEB Grade 12 GPA calculator for Science students in Nepal. Supports Biology and Computer Science streams and follows the official NEB grading system.">
+<meta name="keywords" content="NEB GPA calculator, Grade 12 Nepal, NEB Science GPA, Nepal Education Board, NEB grading system, Biology stream GPA, Computer Science stream GPA, NEB result calculator">
+<meta name="author" content="Krishal Shrestha">
+<meta name="robots" content="index, follow">
+
+<!-- ─── Open Graph: Social Media Sharing ─── -->
+<meta property="og:title" content="NEB GPA Calculator for Grade 12 (Science)">
+<meta property="og:description" content="Free NEB Grade 12 GPA calculator for Science students in Nepal. Supports Biology and Computer Science streams.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://krishal-tha-shrestha.github.io/Neb-grade-calculator/">
+<meta property="og:site_name" content="NEB GPA Calculator">
+
+<!-- ─── Twitter Card ─── -->
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="NEB GPA Calculator for Grade 12 (Science)">
+<meta name="twitter:description" content="Free NEB Grade 12 GPA calculator for Science students in Nepal.">
+
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -45,7 +66,7 @@
   .container {
     max-width: 780px;
     margin: 0 auto;
-    padding: 40px 16px 80px;
+    padding: 40px 16px 40px;
     position: relative;
     z-index: 1;
   }
@@ -83,10 +104,17 @@
     margin-bottom: 12px;
   }
 
-  header p {
+  header p { color: var(--subtext); font-size: 13px; letter-spacing: 1px; }
+
+  /* ─── Page description ─── */
+  .page-description {
+    margin-top: 14px;
+    font-size: 12px;
     color: var(--subtext);
-    font-size: 13px;
-    letter-spacing: 1px;
+    line-height: 1.7;
+    max-width: 540px;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .stream-selector {
@@ -111,7 +139,8 @@
     letter-spacing: 0.5px;
   }
 
-  .stream-btn:hover { border-color: var(--accent); color: var(--text); }
+  .stream-btn:hover { border-color: var(--accent); color: var(--text); transform: translateY(-1px); }
+  .stream-btn:active { transform: translateY(0); }
   .stream-btn.active {
     background: linear-gradient(135deg, rgba(108,99,255,0.2), rgba(108,99,255,0.05));
     border-color: var(--accent);
@@ -128,7 +157,6 @@
     animation: fadeUp 0.7s 0.2s ease both;
   }
 
-  /* 5 columns: Subject | Theory input+label | Practical input+label | Grade | GPA */
   .table-header, .subject-row {
     display: grid;
     grid-template-columns: 130px 1fr 1fr 56px 50px;
@@ -204,12 +232,7 @@
     box-shadow: 0 0 0 3px rgba(255,95,126,0.15);
   }
 
-  .max-label {
-    font-size: 11px;
-    color: var(--subtext);
-    white-space: nowrap;
-    flex-shrink: 0;
-  }
+  .max-label { font-size: 11px; color: var(--subtext); white-space: nowrap; flex-shrink: 0; }
 
   .grade-cell, .gpa-cell {
     text-align: center;
@@ -223,6 +246,7 @@
   .grade-cell.filled { color: var(--accent3); }
   .grade-cell.ng { color: var(--danger); }
 
+  /* ─── Calculate button with hover animation ─── */
   .calc-btn {
     width: 100%;
     padding: 18px;
@@ -242,8 +266,8 @@
     animation: fadeUp 0.7s 0.3s ease both;
   }
 
-  .calc-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(108,99,255,0.4); }
-  .calc-btn:active { transform: translateY(0); }
+  .calc-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 32px rgba(108,99,255,0.45); }
+  .calc-btn:active { transform: translateY(0); box-shadow: none; }
 
   .results {
     background: var(--card);
@@ -264,10 +288,7 @@
     color: var(--accent);
   }
 
-  .results-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  }
+  .results-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
 
   .result-subject {
     padding: 14px 20px;
@@ -278,13 +299,7 @@
     align-items: center;
   }
 
-  .result-subject-name {
-    font-family: 'Syne', sans-serif;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--subtext);
-  }
-
+  .result-subject-name { font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 600; color: var(--subtext); }
   .result-right { display: flex; align-items: center; gap: 12px; }
   .result-pct { font-size: 12px; color: var(--subtext); }
 
@@ -300,7 +315,7 @@
   .result-grade.ng { color: var(--danger); }
 
   .final-gpa {
-    padding: 32px 24px;
+    padding: 32px 24px 20px;
     text-align: center;
     background: linear-gradient(135deg, rgba(108,99,255,0.08), rgba(67,232,216,0.04));
   }
@@ -331,7 +346,109 @@
   .division-text.warning { color: var(--warning); }
   .division-text.danger  { color: var(--danger); }
 
-  .gpa-sub { font-size: 12px; color: var(--subtext); letter-spacing: 1px; }
+  .gpa-sub { font-size: 12px; color: var(--subtext); letter-spacing: 1px; margin-bottom: 20px; }
+
+  /* ─── Result note ─── */
+  .result-note {
+    font-size: 11px;
+    color: var(--subtext);
+    margin-top: 8px;
+    margin-bottom: 4px;
+    font-style: italic;
+    opacity: 0.7;
+  }
+
+  /* ─── Copy & Share buttons ─── */
+  .action-btns {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+
+  .action-btn {
+    padding: 10px 22px;
+    border-radius: 10px;
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    letter-spacing: 0.5px;
+    border: none;
+  }
+
+  .copy-btn {
+    background: rgba(67,232,216,0.1);
+    border: 1px solid rgba(67,232,216,0.3);
+    color: var(--accent3);
+  }
+
+  .copy-btn:hover { background: rgba(67,232,216,0.2); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(67,232,216,0.15); }
+  .copy-btn:active { transform: translateY(0); }
+
+  .share-btn {
+    background: rgba(108,99,255,0.1);
+    border: 1px solid rgba(108,99,255,0.3);
+    color: var(--accent);
+  }
+
+  .share-btn:hover { background: rgba(108,99,255,0.2); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(108,99,255,0.2); }
+  .share-btn:active { transform: translateY(0); }
+
+  /* ─── Toast notification for copy feedback ─── */
+  .toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--card);
+    border: 1px solid var(--accent3);
+    color: var(--accent3);
+    padding: 10px 24px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 600;
+    z-index: 999;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+  .reset-btn {
+    display: block;
+    margin: 16px auto 0;
+    padding: 10px 28px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--subtext);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+  }
+
+  .reset-btn:hover { border-color: var(--accent2); color: var(--accent2); transform: translateY(-1px); }
+  .reset-btn:active { transform: translateY(0); }
+
+  .error-msg {
+    background: rgba(255,95,126,0.1);
+    border: 1px solid rgba(255,95,126,0.3);
+    border-radius: 10px;
+    padding: 12px 16px;
+    color: var(--danger);
+    font-size: 13px;
+    margin-bottom: 16px;
+    display: none;
+  }
+
+  .error-msg.show { display: block; }
 
   .grade-ref {
     margin-top: 32px;
@@ -365,35 +482,55 @@
   .chip span { color: var(--accent3); font-weight: 500; }
   .chip:hover { border-color: var(--accent); color: var(--text); }
 
-  .reset-btn {
-    display: block;
-    margin: 16px auto 0;
-    padding: 10px 28px;
-    background: transparent;
+  /* ─── Footer ─── */
+  footer {
+    margin-top: 48px;
+    padding: 24px;
+    background: var(--card);
     border: 1px solid var(--border);
-    border-radius: 10px;
-    color: var(--subtext);
-    font-family: 'DM Mono', monospace;
-    font-size: 12px;
-    cursor: pointer;
-    transition: all 0.2s;
-    letter-spacing: 1px;
+    border-radius: 16px;
+    text-align: center;
+    animation: fadeUp 0.7s 0.5s ease both;
   }
 
-  .reset-btn:hover { border-color: var(--accent2); color: var(--accent2); }
-
-  .error-msg {
-    background: rgba(255,95,126,0.1);
-    border: 1px solid rgba(255,95,126,0.3);
-    border-radius: 10px;
-    padding: 12px 16px;
-    color: var(--danger);
+  .footer-dev {
+    font-family: 'Syne', sans-serif;
     font-size: 13px;
-    margin-bottom: 16px;
-    display: none;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 8px;
   }
 
-  .error-msg.show { display: block; }
+  .footer-dev span { color: var(--accent3); }
+
+  .footer-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .footer-link {
+    font-size: 12px;
+    color: var(--subtext);
+    text-decoration: none;
+    transition: color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .footer-link:hover { color: var(--accent); }
+
+  .footer-divider { color: var(--border); font-size: 12px; }
+
+  .footer-year {
+    font-size: 11px;
+    color: var(--subtext);
+    margin-top: 10px;
+    opacity: 0.6;
+  }
 
   @keyframes fadeDown {
     from { opacity: 0; transform: translateY(-20px); }
@@ -416,49 +553,105 @@
     .max-label { font-size: 10px; }
     .grade-cell, .gpa-cell { font-size: 12px; }
     .gpa-number { font-size: 48px; }
+    .action-btns { flex-direction: column; align-items: center; }
+    .action-btn { width: 100%; max-width: 260px; }
   }
 </style>
 </head>
 <body>
+
+<!-- ─── Toast Notification ─── -->
+<div class="toast" id="toast" role="alert" aria-live="polite"></div>
+
 <div class="container">
 
   <header>
     <div class="badge">Nepal Education Board</div>
     <h1>Grade 12 GPA Calculator</h1>
     <p>Science Stream</p>
+    <!-- ─── Page description for SEO and UX ─── -->
+    <p class="page-description">
+      Free NEB Grade 12 GPA calculator for Science students in Nepal.
+      Supports Biology and Computer Science streams and follows the official NEB grading system.
+    </p>
   </header>
 
-  <div class="stream-selector">
-    <button class="stream-btn active" onclick="setStream('biology')" id="btn-biology">🧬 Biology</button>
-    <button class="stream-btn" onclick="setStream('computer')" id="btn-computer">💻 Computer Science</button>
+  <!-- ─── Stream selector ─── -->
+  <div class="stream-selector" role="group" aria-label="Select optional subject stream">
+    <button class="stream-btn active"
+            onclick="setStream('biology')"
+            id="btn-biology"
+            aria-pressed="true"
+            aria-label="Select Biology stream">
+      🧬 Biology
+    </button>
+    <button class="stream-btn"
+            onclick="setStream('computer')"
+            id="btn-computer"
+            aria-pressed="false"
+            aria-label="Select Computer Science stream">
+      💻 Computer Science
+    </button>
   </div>
 
-  <div class="error-msg" id="error-msg"></div>
+  <!-- ─── Error message ─── -->
+  <div class="error-msg" id="error-msg" role="alert"></div>
 
-  <div class="table-wrap">
-    <div class="table-header">
-      <span>Subject</span>
-      <span>Theory</span>
-      <span>Practical</span>
-      <span>Grade</span>
-      <span>GPA</span>
+  <!-- ─── Marks input table ─── -->
+  <div class="table-wrap" role="table" aria-label="Subject marks input table">
+    <div class="table-header" role="row">
+      <span role="columnheader">Subject</span>
+      <span role="columnheader">Theory</span>
+      <span role="columnheader">Practical</span>
+      <span role="columnheader">Grade</span>
+      <span role="columnheader">GPA</span>
     </div>
     <div id="subject-rows"></div>
   </div>
 
-  <button class="calc-btn" onclick="calculate()">Calculate GPA →</button>
+  <!-- ─── Calculate button ─── -->
+  <button class="calc-btn"
+          onclick="calculate()"
+          aria-label="Calculate GPA based on entered marks">
+    Calculate GPA →
+  </button>
 
-  <div class="results" id="results">
+  <!-- ─── Results section ─── -->
+  <div class="results" id="results" aria-live="polite" aria-label="GPA calculation results">
     <div class="results-header">Subject Breakdown</div>
     <div class="results-grid" id="results-grid"></div>
     <div class="final-gpa">
-      <div class="gpa-number" id="gpa-number">0.00</div>
+      <div class="gpa-number" id="gpa-number" aria-label="Final GPA">0.00</div>
       <div class="division-text" id="division-text"></div>
       <div class="gpa-sub">Final Grade Point Average</div>
+
+      <!-- ─── Copy & Share buttons ─── -->
+      <div class="action-btns">
+        <button class="action-btn copy-btn"
+                onclick="copyResult()"
+                aria-label="Copy GPA result to clipboard">
+          📋 Copy Result
+        </button>
+        <button class="action-btn share-btn"
+                onclick="shareResult()"
+                aria-label="Share your GPA result">
+          🔗 Share Result
+        </button>
+      </div>
+
+      <!-- ─── Disclaimer note ─── -->
+      <p class="result-note">Note: This calculator estimates GPA based on NEB grading guidelines.</p>
     </div>
-    <button class="reset-btn" onclick="reset()">↺ Reset</button>
+
+    <!-- ─── Reset button ─── -->
+    <button class="reset-btn"
+            onclick="reset()"
+            aria-label="Reset all marks and clear results">
+      ↺ Reset
+    </button>
   </div>
 
+  <!-- ─── Grade reference ─── -->
   <div class="grade-ref">
     <div class="grade-ref-title">Grade Reference</div>
     <div class="grade-chips">
@@ -473,9 +666,35 @@
     </div>
   </div>
 
+  <!-- ─── Footer ─── -->
+  <footer>
+    <div class="footer-dev">
+      Developed by <span>Krishal Shrestha</span>
+    </div>
+    <div class="footer-links">
+      <a href="https://github.com/Krishal-Tha-Shrestha/Neb-grade-calculator"
+         target="_blank"
+         rel="noopener noreferrer"
+         class="footer-link"
+         aria-label="View source code on GitHub">
+        ⌥ GitHub Repository
+      </a>
+      <span class="footer-divider">·</span>
+      <a href="https://github.com/Krishal-Tha-Shrestha"
+         target="_blank"
+         rel="noopener noreferrer"
+         class="footer-link"
+         aria-label="Visit developer's GitHub profile">
+        👤 GitHub Profile
+      </a>
+    </div>
+    <div class="footer-year" id="footer-year"></div>
+  </footer>
+
 </div>
 
 <script>
+  /* ─── Subject data (unchanged) ─── */
   const SUBJECTS = {
     biology: [
       { name: "English",     theory: 75, practical: 25 },
@@ -497,6 +716,7 @@
 
   let currentStream = 'biology';
 
+  /* ─── GPA logic (unchanged) ─── */
   function getGrade(pct) {
     if (pct >= 90) return { grade: "A+", gp: 4.0, remark: "Outstanding" };
     if (pct >= 80) return { grade: "A",  gp: 3.6, remark: "Excellent" };
@@ -508,39 +728,49 @@
     return { grade: "NG", gp: 0.0, remark: "Non-Graded" };
   }
 
+  /* ─── Stream switcher ─── */
   function setStream(stream) {
     currentStream = stream;
-    document.getElementById('btn-biology').classList.toggle('active', stream === 'biology');
-    document.getElementById('btn-computer').classList.toggle('active', stream === 'computer');
+    const bioBtnEl = document.getElementById('btn-biology');
+    const compBtnEl = document.getElementById('btn-computer');
+    bioBtnEl.classList.toggle('active', stream === 'biology');
+    compBtnEl.classList.toggle('active', stream === 'computer');
+    // Update aria-pressed for accessibility
+    bioBtnEl.setAttribute('aria-pressed', stream === 'biology');
+    compBtnEl.setAttribute('aria-pressed', stream === 'computer');
     buildRows();
     hideResults();
   }
 
+  /* ─── Build subject rows (unchanged, with aria-labels added) ─── */
   function buildRows() {
     const container = document.getElementById('subject-rows');
     container.innerHTML = '';
     SUBJECTS[currentStream].forEach((s, i) => {
       container.innerHTML += `
-        <div class="subject-row" id="row-${i}">
-          <div class="subject-name">${s.name}</div>
-          <div class="input-group">
+        <div class="subject-row" id="row-${i}" role="row">
+          <div class="subject-name" role="cell">${s.name}</div>
+          <div class="input-group" role="cell">
             <input type="number" class="marks-input" id="theory-${i}"
               min="0" max="${s.theory}" placeholder="0"
+              aria-label="${s.name} theory marks out of ${s.theory}"
               oninput="liveUpdate(${i})">
-            <span class="max-label">/${s.theory}</span>
+            <span class="max-label" aria-hidden="true">/${s.theory}</span>
           </div>
-          <div class="input-group">
+          <div class="input-group" role="cell">
             <input type="number" class="marks-input" id="practical-${i}"
               min="0" max="${s.practical}" placeholder="0"
+              aria-label="${s.name} practical marks out of ${s.practical}"
               oninput="liveUpdate(${i})">
-            <span class="max-label">/${s.practical}</span>
+            <span class="max-label" aria-hidden="true">/${s.practical}</span>
           </div>
-          <div class="grade-cell" id="grade-${i}">--</div>
-          <div class="gpa-cell" id="gpa-${i}">--</div>
+          <div class="grade-cell" id="grade-${i}" role="cell" aria-label="${s.name} grade">--</div>
+          <div class="gpa-cell"   id="gpa-${i}"   role="cell" aria-label="${s.name} GPA">--</div>
         </div>`;
     });
   }
 
+  /* ─── Live grade update (unchanged) ─── */
   function liveUpdate(i) {
     const s = SUBJECTS[currentStream][i];
     const t = parseFloat(document.getElementById(`theory-${i}`).value);
@@ -548,7 +778,7 @@
     if (!isNaN(t) && !isNaN(p)) {
       const pct = (t + p) / (s.theory + s.practical) * 100;
       const { grade, gp } = getGrade(pct);
-      const gc = document.getElementById(`grade-${i}`);
+      const gc  = document.getElementById(`grade-${i}`);
       const gpc = document.getElementById(`gpa-${i}`);
       gc.textContent = grade;
       gc.className = 'grade-cell filled' + (grade === 'NG' ? ' ng' : '');
@@ -556,6 +786,7 @@
     }
   }
 
+  /* ─── Show error ─── */
   function showError(msg) {
     const el = document.getElementById('error-msg');
     el.textContent = msg;
@@ -563,22 +794,23 @@
     setTimeout(() => el.classList.remove('show'), 3000);
   }
 
+  /* ─── Calculate GPA (unchanged logic) ─── */
   function calculate() {
     const subjects = SUBJECTS[currentStream];
     let totalGP = 0, hasNG = false;
     const breakdown = [];
 
     for (let i = 0; i < subjects.length; i++) {
-      const s = subjects[i];
+      const s   = subjects[i];
       const tEl = document.getElementById(`theory-${i}`);
       const pEl = document.getElementById(`practical-${i}`);
-      const t = parseFloat(tEl.value);
-      const p = parseFloat(pEl.value);
+      const t   = parseFloat(tEl.value);
+      const p   = parseFloat(pEl.value);
 
-      if (isNaN(t) || tEl.value === '') { showError(`Enter theory marks for ${s.name}`); tEl.classList.add('error'); tEl.focus(); return; }
+      if (isNaN(t) || tEl.value === '') { showError(`Enter theory marks for ${s.name}`);    tEl.classList.add('error'); tEl.focus(); return; }
       if (isNaN(p) || pEl.value === '') { showError(`Enter practical marks for ${s.name}`); pEl.classList.add('error'); pEl.focus(); return; }
-      if (t < 0 || t > s.theory) { showError(`${s.name} theory must be 0–${s.theory}`); tEl.classList.add('error'); return; }
-      if (p < 0 || p > s.practical) { showError(`${s.name} practical must be 0–${s.practical}`); pEl.classList.add('error'); return; }
+      if (t < 0 || t > s.theory)        { showError(`${s.name} theory must be 0–${s.theory}`);       tEl.classList.add('error'); return; }
+      if (p < 0 || p > s.practical)     { showError(`${s.name} practical must be 0–${s.practical}`); pEl.classList.add('error'); return; }
 
       tEl.classList.remove('error');
       pEl.classList.remove('error');
@@ -592,6 +824,7 @@
 
     const finalGPA = totalGP / subjects.length;
 
+    // Build breakdown grid
     const grid = document.getElementById('results-grid');
     grid.innerHTML = breakdown.map(b => `
       <div class="result-subject">
@@ -603,6 +836,7 @@
       </div>
     `).join('');
 
+    // Determine division
     let div, colorClass;
     if (hasNG)                { div = "❌ Fail (NG in subject)"; colorClass = 'danger'; }
     else if (finalGPA >= 3.6) { div = "🏆 Distinction";          colorClass = 'success'; }
@@ -612,13 +846,85 @@
     else                      { div = "❌ Fail";                  colorClass = 'danger'; }
 
     document.getElementById('gpa-number').textContent = finalGPA.toFixed(2);
-    document.getElementById('gpa-number').className = `gpa-number ${colorClass}`;
+    document.getElementById('gpa-number').className   = `gpa-number ${colorClass}`;
     document.getElementById('division-text').textContent = div;
-    document.getElementById('division-text').className = `division-text ${colorClass}`;
+    document.getElementById('division-text').className   = `division-text ${colorClass}`;
 
     const results = document.getElementById('results');
     results.classList.add('show');
     results.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  /* ─── Build the shareable result text ─── */
+  function buildResultText() {
+    const gpa = document.getElementById('gpa-number').textContent;
+    const div = document.getElementById('division-text').textContent;
+    const siteUrl = 'https://krishal-tha-shrestha.github.io/Neb-grade-calculator/';
+    // Strip emoji from division for cleaner text
+    const divClean = div.replace(/[\u{1F300}-\u{1FFFF}]|[\u2600-\u27FF]/gu, '').trim();
+    return `My NEB Grade 12 GPA is ${gpa} (${divClean}). Calculate yours here: ${siteUrl}`;
+  }
+
+  /* ─── Show toast notification ─── */
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2500);
+  }
+
+  /* ─── Copy result to clipboard ─── */
+  function copyResult() {
+    const text = buildResultText();
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      // Modern clipboard API
+      navigator.clipboard.writeText(text)
+        .then(() => showToast('✅ Result copied to clipboard!'))
+        .catch(() => fallbackCopy(text));
+    } else {
+      fallbackCopy(text);
+    }
+  }
+
+  /* ─── Fallback copy for older browsers ─── */
+  function fallbackCopy(text) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    try {
+      document.execCommand('copy');
+      showToast('✅ Result copied to clipboard!');
+    } catch {
+      showToast('❌ Could not copy. Please copy manually.');
+    }
+    document.body.removeChild(ta);
+  }
+
+  /* ─── Share result using Web Share API (mobile) ─── */
+  function shareResult() {
+    const text = buildResultText();
+    const shareData = {
+      title: 'My NEB Grade 12 GPA Result',
+      text: text,
+      url: 'https://krishal-tha-shrestha.github.io/Neb-grade-calculator/'
+    };
+    if (navigator.share) {
+      // Web Share API supported (most mobile browsers)
+      navigator.share(shareData)
+        .then(() => showToast('✅ Shared successfully!'))
+        .catch(() => {
+          // User cancelled or error — fall back to copy
+          copyResult();
+        });
+    } else {
+      // Browser doesn't support Web Share API — fall back to copy
+      copyResult();
+      showToast('✅ Link copied! (Share not supported on this browser)');
+    }
   }
 
   function hideResults() {
@@ -630,6 +936,10 @@
     hideResults();
   }
 
+  /* ─── Set current year in footer ─── */
+  document.getElementById('footer-year').textContent = `© ${new Date().getFullYear()} Krishal Shrestha. All rights reserved.`;
+
+  // Init rows on page load
   buildRows();
 </script>
 </body>
