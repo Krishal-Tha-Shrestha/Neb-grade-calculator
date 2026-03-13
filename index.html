@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEB Grade 12 GPA Calculator</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --card: #16161f;
+    --border: #252535;
+    --accent: #6c63ff;
+    --accent2: #ff6584;
+    --accent3: #43e8d8;
+    --text: #f0f0ff;
+    --subtext: #8888aa;
+    --success: #43e8a0;
+    --warning: #ffbe57;
+    --danger: #ff5f7e;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 20% 20%, rgba(108,99,255,0.08) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 80% 80%, rgba(67,232,216,0.06) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 40px 16px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 48px;
+    animation: fadeDown 0.7s ease both;
+  }
+
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent3);
+    border: 1px solid rgba(67,232,216,0.3);
+    padding: 6px 16px;
+    border-radius: 100px;
+    margin-bottom: 20px;
+    background: rgba(67,232,216,0.05);
+  }
+
+  h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(26px, 5vw, 48px);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, #fff 30%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 12px;
+  }
+
+  header p {
+    color: var(--subtext);
+    font-size: 13px;
+    letter-spacing: 1px;
+  }
+
+  .stream-selector {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 32px;
+    animation: fadeUp 0.7s 0.1s ease both;
+  }
+
+  .stream-btn {
+    flex: 1;
+    padding: 14px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--subtext);
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    letter-spacing: 0.5px;
+  }
+
+  .stream-btn:hover { border-color: var(--accent); color: var(--text); }
+  .stream-btn.active {
+    background: linear-gradient(135deg, rgba(108,99,255,0.2), rgba(108,99,255,0.05));
+    border-color: var(--accent);
+    color: var(--text);
+    box-shadow: 0 0 20px rgba(108,99,255,0.15);
+  }
+
+  .table-wrap {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 24px;
+    animation: fadeUp 0.7s 0.2s ease both;
+  }
+
+  /* 5 columns: Subject | Theory input+label | Practical input+label | Grade | GPA */
+  .table-header, .subject-row {
+    display: grid;
+    grid-template-columns: 130px 1fr 1fr 56px 50px;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 14px;
+  }
+
+  .table-header {
+    background: rgba(108,99,255,0.08);
+    border-bottom: 1px solid var(--border);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  .table-header span { text-align: center; }
+  .table-header span:first-child { text-align: left; }
+
+  .subject-row {
+    border-bottom: 1px solid rgba(37,37,53,0.6);
+    transition: background 0.2s;
+  }
+
+  .subject-row:last-child { border-bottom: none; }
+  .subject-row:hover { background: rgba(255,255,255,0.02); }
+
+  .subject-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .input-group {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    justify-content: center;
+  }
+
+  .marks-input {
+    width: 0;
+    flex: 1;
+    min-width: 0;
+    max-width: 58px;
+    padding: 8px 4px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    text-align: center;
+    outline: none;
+    transition: all 0.2s;
+    -moz-appearance: textfield;
+  }
+
+  .marks-input::-webkit-inner-spin-button,
+  .marks-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+
+  .marks-input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(108,99,255,0.15);
+    background: rgba(108,99,255,0.05);
+  }
+
+  .marks-input.error {
+    border-color: var(--danger);
+    box-shadow: 0 0 0 3px rgba(255,95,126,0.15);
+  }
+
+  .max-label {
+    font-size: 11px;
+    color: var(--subtext);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .grade-cell, .gpa-cell {
+    text-align: center;
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--subtext);
+    transition: all 0.3s;
+  }
+
+  .grade-cell.filled { color: var(--accent3); }
+  .grade-cell.ng { color: var(--danger); }
+
+  .calc-btn {
+    width: 100%;
+    padding: 18px;
+    background: linear-gradient(135deg, var(--accent), #9c63ff);
+    border: none;
+    border-radius: 14px;
+    color: white;
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp 0.7s 0.3s ease both;
+  }
+
+  .calc-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(108,99,255,0.4); }
+  .calc-btn:active { transform: translateY(0); }
+
+  .results {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    display: none;
+  }
+
+  .results.show { display: block; animation: fadeUp 0.5s ease both; }
+
+  .results-header {
+    padding: 20px 24px 16px;
+    border-bottom: 1px solid var(--border);
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+
+  .result-subject {
+    padding: 14px 20px;
+    border-bottom: 1px solid rgba(37,37,53,0.6);
+    border-right: 1px solid rgba(37,37,53,0.4);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .result-subject-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--subtext);
+  }
+
+  .result-right { display: flex; align-items: center; gap: 12px; }
+  .result-pct { font-size: 12px; color: var(--subtext); }
+
+  .result-grade {
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--accent3);
+    min-width: 28px;
+    text-align: right;
+  }
+
+  .result-grade.ng { color: var(--danger); }
+
+  .final-gpa {
+    padding: 32px 24px;
+    text-align: center;
+    background: linear-gradient(135deg, rgba(108,99,255,0.08), rgba(67,232,216,0.04));
+  }
+
+  .gpa-number {
+    font-family: 'Syne', sans-serif;
+    font-size: 64px;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -3px;
+    margin-bottom: 8px;
+    transition: color 0.5s;
+  }
+
+  .gpa-number.success { color: var(--success); }
+  .gpa-number.warning { color: var(--warning); }
+  .gpa-number.danger  { color: var(--danger); }
+
+  .division-text {
+    font-family: 'Syne', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+
+  .division-text.success { color: var(--success); }
+  .division-text.warning { color: var(--warning); }
+  .division-text.danger  { color: var(--danger); }
+
+  .gpa-sub { font-size: 12px; color: var(--subtext); letter-spacing: 1px; }
+
+  .grade-ref {
+    margin-top: 32px;
+    padding: 20px 24px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    animation: fadeUp 0.7s 0.4s ease both;
+  }
+
+  .grade-ref-title {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+
+  .grade-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+
+  .chip {
+    padding: 6px 12px;
+    border-radius: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    font-size: 11px;
+    color: var(--subtext);
+    transition: all 0.2s;
+  }
+
+  .chip span { color: var(--accent3); font-weight: 500; }
+  .chip:hover { border-color: var(--accent); color: var(--text); }
+
+  .reset-btn {
+    display: block;
+    margin: 16px auto 0;
+    padding: 10px 28px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--subtext);
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+  }
+
+  .reset-btn:hover { border-color: var(--accent2); color: var(--accent2); }
+
+  .error-msg {
+    background: rgba(255,95,126,0.1);
+    border: 1px solid rgba(255,95,126,0.3);
+    border-radius: 10px;
+    padding: 12px 16px;
+    color: var(--danger);
+    font-size: 13px;
+    margin-bottom: 16px;
+    display: none;
+  }
+
+  .error-msg.show { display: block; }
+
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 480px) {
+    .table-header, .subject-row {
+      grid-template-columns: 100px 1fr 1fr 46px 42px;
+      padding: 10px 10px;
+      gap: 4px;
+    }
+    .subject-name { font-size: 12px; }
+    .marks-input { font-size: 12px; padding: 6px 2px; }
+    .max-label { font-size: 10px; }
+    .grade-cell, .gpa-cell { font-size: 12px; }
+    .gpa-number { font-size: 48px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="badge">Nepal Education Board</div>
+    <h1>Grade 12 GPA Calculator</h1>
+    <p>Science Stream</p>
+  </header>
+
+  <div class="stream-selector">
+    <button class="stream-btn active" onclick="setStream('biology')" id="btn-biology">🧬 Biology</button>
+    <button class="stream-btn" onclick="setStream('computer')" id="btn-computer">💻 Computer Science</button>
+  </div>
+
+  <div class="error-msg" id="error-msg"></div>
+
+  <div class="table-wrap">
+    <div class="table-header">
+      <span>Subject</span>
+      <span>Theory</span>
+      <span>Practical</span>
+      <span>Grade</span>
+      <span>GPA</span>
+    </div>
+    <div id="subject-rows"></div>
+  </div>
+
+  <button class="calc-btn" onclick="calculate()">Calculate GPA →</button>
+
+  <div class="results" id="results">
+    <div class="results-header">Subject Breakdown</div>
+    <div class="results-grid" id="results-grid"></div>
+    <div class="final-gpa">
+      <div class="gpa-number" id="gpa-number">0.00</div>
+      <div class="division-text" id="division-text"></div>
+      <div class="gpa-sub">Final Grade Point Average</div>
+    </div>
+    <button class="reset-btn" onclick="reset()">↺ Reset</button>
+  </div>
+
+  <div class="grade-ref">
+    <div class="grade-ref-title">Grade Reference</div>
+    <div class="grade-chips">
+      <div class="chip"><span>A+</span> 4.0 · 90–100%</div>
+      <div class="chip"><span>A</span> 3.6 · 80–89%</div>
+      <div class="chip"><span>B+</span> 3.2 · 70–79%</div>
+      <div class="chip"><span>B</span> 2.8 · 60–69%</div>
+      <div class="chip"><span>C+</span> 2.4 · 50–59%</div>
+      <div class="chip"><span>C</span> 2.0 · 40–49%</div>
+      <div class="chip"><span>D</span> 1.6 · 35–39%</div>
+      <div class="chip"><span>NG</span> 0.0 · Below 35%</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const SUBJECTS = {
+    biology: [
+      { name: "English",     theory: 75, practical: 25 },
+      { name: "Nepali",      theory: 75, practical: 25 },
+      { name: "Physics",     theory: 75, practical: 25 },
+      { name: "Chemistry",   theory: 75, practical: 25 },
+      { name: "Mathematics", theory: 75, practical: 25 },
+      { name: "Biology",     theory: 75, practical: 25 },
+    ],
+    computer: [
+      { name: "English",      theory: 75, practical: 25 },
+      { name: "Nepali",       theory: 75, practical: 25 },
+      { name: "Physics",      theory: 75, practical: 25 },
+      { name: "Chemistry",    theory: 75, practical: 25 },
+      { name: "Mathematics",  theory: 75, practical: 25 },
+      { name: "Computer Sc.", theory: 50, practical: 50 },
+    ]
+  };
+
+  let currentStream = 'biology';
+
+  function getGrade(pct) {
+    if (pct >= 90) return { grade: "A+", gp: 4.0, remark: "Outstanding" };
+    if (pct >= 80) return { grade: "A",  gp: 3.6, remark: "Excellent" };
+    if (pct >= 70) return { grade: "B+", gp: 3.2, remark: "Very Good" };
+    if (pct >= 60) return { grade: "B",  gp: 2.8, remark: "Good" };
+    if (pct >= 50) return { grade: "C+", gp: 2.4, remark: "Satisfactory" };
+    if (pct >= 40) return { grade: "C",  gp: 2.0, remark: "Acceptable" };
+    if (pct >= 35) return { grade: "D",  gp: 1.6, remark: "Basic" };
+    return { grade: "NG", gp: 0.0, remark: "Non-Graded" };
+  }
+
+  function setStream(stream) {
+    currentStream = stream;
+    document.getElementById('btn-biology').classList.toggle('active', stream === 'biology');
+    document.getElementById('btn-computer').classList.toggle('active', stream === 'computer');
+    buildRows();
+    hideResults();
+  }
+
+  function buildRows() {
+    const container = document.getElementById('subject-rows');
+    container.innerHTML = '';
+    SUBJECTS[currentStream].forEach((s, i) => {
+      container.innerHTML += `
+        <div class="subject-row" id="row-${i}">
+          <div class="subject-name">${s.name}</div>
+          <div class="input-group">
+            <input type="number" class="marks-input" id="theory-${i}"
+              min="0" max="${s.theory}" placeholder="0"
+              oninput="liveUpdate(${i})">
+            <span class="max-label">/${s.theory}</span>
+          </div>
+          <div class="input-group">
+            <input type="number" class="marks-input" id="practical-${i}"
+              min="0" max="${s.practical}" placeholder="0"
+              oninput="liveUpdate(${i})">
+            <span class="max-label">/${s.practical}</span>
+          </div>
+          <div class="grade-cell" id="grade-${i}">--</div>
+          <div class="gpa-cell" id="gpa-${i}">--</div>
+        </div>`;
+    });
+  }
+
+  function liveUpdate(i) {
+    const s = SUBJECTS[currentStream][i];
+    const t = parseFloat(document.getElementById(`theory-${i}`).value);
+    const p = parseFloat(document.getElementById(`practical-${i}`).value);
+    if (!isNaN(t) && !isNaN(p)) {
+      const pct = (t + p) / (s.theory + s.practical) * 100;
+      const { grade, gp } = getGrade(pct);
+      const gc = document.getElementById(`grade-${i}`);
+      const gpc = document.getElementById(`gpa-${i}`);
+      gc.textContent = grade;
+      gc.className = 'grade-cell filled' + (grade === 'NG' ? ' ng' : '');
+      gpc.textContent = gp.toFixed(1);
+    }
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('error-msg');
+    el.textContent = msg;
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 3000);
+  }
+
+  function calculate() {
+    const subjects = SUBJECTS[currentStream];
+    let totalGP = 0, hasNG = false;
+    const breakdown = [];
+
+    for (let i = 0; i < subjects.length; i++) {
+      const s = subjects[i];
+      const tEl = document.getElementById(`theory-${i}`);
+      const pEl = document.getElementById(`practical-${i}`);
+      const t = parseFloat(tEl.value);
+      const p = parseFloat(pEl.value);
+
+      if (isNaN(t) || tEl.value === '') { showError(`Enter theory marks for ${s.name}`); tEl.classList.add('error'); tEl.focus(); return; }
+      if (isNaN(p) || pEl.value === '') { showError(`Enter practical marks for ${s.name}`); pEl.classList.add('error'); pEl.focus(); return; }
+      if (t < 0 || t > s.theory) { showError(`${s.name} theory must be 0–${s.theory}`); tEl.classList.add('error'); return; }
+      if (p < 0 || p > s.practical) { showError(`${s.name} practical must be 0–${s.practical}`); pEl.classList.add('error'); return; }
+
+      tEl.classList.remove('error');
+      pEl.classList.remove('error');
+
+      const pct = (t + p) / (s.theory + s.practical) * 100;
+      const { grade, gp, remark } = getGrade(pct);
+      if (grade === 'NG') hasNG = true;
+      totalGP += gp;
+      breakdown.push({ name: s.name, pct, grade, gp, remark });
+    }
+
+    const finalGPA = totalGP / subjects.length;
+
+    const grid = document.getElementById('results-grid');
+    grid.innerHTML = breakdown.map(b => `
+      <div class="result-subject">
+        <div class="result-subject-name">${b.name}</div>
+        <div class="result-right">
+          <div class="result-pct">${b.pct.toFixed(1)}%</div>
+          <div class="result-grade ${b.grade === 'NG' ? 'ng' : ''}">${b.grade}</div>
+        </div>
+      </div>
+    `).join('');
+
+    let div, colorClass;
+    if (hasNG)                { div = "❌ Fail (NG in subject)"; colorClass = 'danger'; }
+    else if (finalGPA >= 3.6) { div = "🏆 Distinction";          colorClass = 'success'; }
+    else if (finalGPA >= 2.8) { div = "✅ First Division";        colorClass = 'success'; }
+    else if (finalGPA >= 2.0) { div = "👍 Second Division";       colorClass = 'warning'; }
+    else if (finalGPA >= 1.6) { div = "📋 Third Division";        colorClass = 'warning'; }
+    else                      { div = "❌ Fail";                  colorClass = 'danger'; }
+
+    document.getElementById('gpa-number').textContent = finalGPA.toFixed(2);
+    document.getElementById('gpa-number').className = `gpa-number ${colorClass}`;
+    document.getElementById('division-text').textContent = div;
+    document.getElementById('division-text').className = `division-text ${colorClass}`;
+
+    const results = document.getElementById('results');
+    results.classList.add('show');
+    results.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  function hideResults() {
+    document.getElementById('results').classList.remove('show');
+  }
+
+  function reset() {
+    buildRows();
+    hideResults();
+  }
+
+  buildRows();
+</script>
+</body>
+</html>
